@@ -1,8 +1,10 @@
-from Crawler import Crawler
+from crawler.Crawler import Crawler
+from pylog.logconfig import config_log
 
 
 def main():
-    url = "https://www.example.com"
+    config_log()
+
     crawler = Crawler()
     result = crawler.fetch_news_with_keyword("python", src="naver")
     print(result)
