@@ -1,12 +1,33 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
+import time
 
 
 def check_log_dir():
     path = "./logs"
     if not os.path.exists(path):
         os.makedirs(path)
+
+
+def delete_old_logfiles(days=30):
+    path = "./logs"
+    check_log_dir()
+    now = time.time()
+    old = now - days * 24 * 60 * 60  # 30 days
+
+    cnt = 0
+    for filename in os.listdir(path):
+        if filename.endswith(".log"):
+            filepath = os.path.join(path, filename)
+            if os.path.getmtime(filepath) < old:
+                os.remove(filepath)
+                cnt += 1
+
+    if cnt == 0:
+        logging.debug("No old log files to delete")
+    else:
+        logging.debug(f"Deleted {cnt} old log files")
 
 
 def get_logfile_name():
@@ -28,3 +49,4 @@ def config_log():
     formatter = logging.Formatter("%(name)-12s: %(levelname)-8s %(message)s")
     console.setFormatter(formatter)
     logging.getLogger("").addHandler(console)
+    delete_old_logfiles()
