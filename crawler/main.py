@@ -3,8 +3,9 @@ from Crawler import Crawler
 
 def main():
     url = "https://www.example.com"
-    crawler = Crawler(url)
-    print(crawler.fetch_url_content())
+    crawler = Crawler()
+    result = crawler.fetch_news_with_keyword("python", src="naver")
+    print(result)
 
 
 if __name__ == "__main__":
