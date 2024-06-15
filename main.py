@@ -5,7 +5,7 @@ from pylog.Logger import Logger
 
 def main():
     crawler = Crawler()
-    result = crawler.fetch_news_with_keyword("python", src="naver")
+    result = crawler.fetch_news_with_keyword("Korea", src="cnn", count=100)
     print(result)
 
 
