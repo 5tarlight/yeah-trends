@@ -10,6 +10,7 @@ class Crawler:
         self.soup = None
         self.html_option = None
         self.logger = Logger("crawler.Crawler")
+        self.infinite_scroll = False
 
     def fetch_url_content(self):
         try:
@@ -33,15 +34,30 @@ class Crawler:
             self.logger.error(f"Error parsing the HTML content: {e}")
             return f"Error parsing the HTML content: {e}"
 
-    def fetch_news_with_keyword(self, keyword="", src=None, limit=None):
-        if src == "naver":
+    def specify_platform(self, platform, keyword=""):
+        if platform == "naver":
             self.url = f"https://search.naver.com/search.naver?where=news&ie=utf8&sm=nws_hty&query={keyword}"
             self.html_option = {"class": "news_tit"}
+            self.infinite_scroll = True
+
+            # For now, this crawler can't fetch content from naver properly.
+            # Naver news implemented infinite scrolling but, bs4 can't handle this.
+            # We are planning to use both BeautifulSoup4 and selenium.
+            # TODO : Selenium Crawling
+            self.logger.warning("News source naver is deprecated.")
         else:
             raise ValueError("Invalid or unsupported news source")
 
+    def fetch_news_with_keyword(self, keyword="", src=None, limit=None):
         self.logger.info(f"Fetching news from source: {src}")
+
+        self.specify_platform(src, keyword=keyword)
         self.fetch_url_content()
+
+        # TODO : Remove below
+        if self.infinite_scroll:
+            self.logger.warning("Infinite scrolling is not supported yet.")
+
         if self.soup is None or self.soup.body is None:
             self.logger.warning("Fetching failed due to null atrributes")
             return []
