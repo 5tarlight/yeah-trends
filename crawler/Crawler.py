@@ -29,6 +29,9 @@ class Crawler:
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Error fetching the URL: {e}")
             return f"Error fetching the URL: {e}"
+        except ValueError as e:
+            self.logger.error(f"Error parsing the HTML content: {e}")
+            return f"Error parsing the HTML content: {e}"
 
     def fetch_news_with_keyword(self, keyword="", src=None, limit=None):
         if src == "naver":
